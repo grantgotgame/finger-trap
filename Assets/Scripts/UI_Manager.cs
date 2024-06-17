@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UI_Manager : MonoBehaviour
 {
@@ -12,10 +13,15 @@ public class UI_Manager : MonoBehaviour
     public TextMeshProUGUI PlayTimer;
     public TextMeshProUGUI EndTimer;
     public bool Done;
+    public bool restart;
+    public int restartTime;
 
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 1f;
+        restartTime = 0;
+        restart = true;
         Done = false;
         Victory_Menu.SetActive(false);
         Play_Menu.SetActive(true);
@@ -30,11 +36,6 @@ public class UI_Manager : MonoBehaviour
         if(Player.finish == true)
         {
             Victory();
-        }
-
-        if(Player.kill == false)
-        {
-            Kill();
         }
     }
 
@@ -54,9 +55,14 @@ public class UI_Manager : MonoBehaviour
 
     public void RestartGame()
     {
+        print("cool");
+        Player.finish = false;
         Victory_Menu.SetActive(false);
         Play_Menu.SetActive(true);
         Pause_Menu.SetActive(false);
+        Player.gameObject.transform.position = Player.SpawnPoint.position;
+        Done = false;
+        restart = true;
     }
 
     public void Victory()
@@ -74,27 +80,28 @@ public class UI_Manager : MonoBehaviour
 
     public void LoadLevelSelect()
     {
-
+        SceneManager.LoadScene(0);
     }
 
     public void LoadNextLevel()
     {
-
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     string FormatTime(float time)
     {
-        int intTime = (int)time;
+        if (restart == true)
+        {
+            restartTime = (int)time;
+            restart = false;
+        }
+
+        int intTime = (int)time - restartTime;
         int minutes = intTime / 60;
         int seconds = intTime % 60;
         float fraction = time * 1000;
         fraction = (fraction % 1000);
         string timeText = string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, fraction);
         return timeText;
-    }
-
-    public void Kill()
-    {
-
     }
 }
