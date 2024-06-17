@@ -22,4 +22,14 @@ public class Level_Select_Manager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
+    public void LoadTutorial()
+    {
+        SceneManager.LoadScene(2);
+    }
+
+    public void LoadLevel1()
+    {
+        SceneManager.LoadScene(3);
+    }
+
 }
